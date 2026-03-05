@@ -1,18 +1,28 @@
-#include "tetris.h"
-#include "console.h"
 #include <cstdlib>
-#include <ctime>
+#include "field.h"
+#include "console.h"
+#include "figures.h"
+
+#ifdef _WIN32
+    #include <windows.h>
+    #include <conio.h>
+#endif
 
 #include <chrono>
 #include <thread>
 
 int main()
 {
+    // Если Windows очищаем экран при запуске и включаем поддержку вирутуального терминала
+    #ifdef _WIN32
+    system("cls");
+    enableVirtualTerminal();
+    #endif
     srand(time(nullptr));
     initConsole();
-    newPiece();
+    newBlock();
 
-    const int fallInterval = 500; // миллисекунд между падениями
+    const int fallInterval{500}; // миллисекунд между падениями
     auto lastFallTime = std::chrono::steady_clock::now();
 
     while (true)
@@ -25,27 +35,28 @@ int main()
             char key = getch();
             if (key == 'a' || key == 'A')
             {
-                if (!checkCollision(currentPiece.x - 1, currentPiece.y,
-                                    currentPiece.shape, currentPiece.height, currentPiece.width))
-                    currentPiece.x -= 1;
+                if (!checkCollision(currentBlock.x - 1, currentBlock.y,
+                                    currentBlock.shape, currentBlock.height, currentBlock.width))
+                    currentBlock.x -= 1;
             }
             else if (key == 'd' || key == 'D')
             {
-                if (!checkCollision(currentPiece.x + 1, currentPiece.y,
-                                    currentPiece.shape, currentPiece.height, currentPiece.width))
-                    currentPiece.x += 1;
+                if (!checkCollision(currentBlock.x + 1, currentBlock.y,
+                                    currentBlock.shape, currentBlock.height, currentBlock.width))
+                    currentBlock.x += 1;
             }
             else if (key == 'w' || key == 'W')
             {
-                int newH, newW;
-                int** rotated = rotateShape(currentPiece.shape, currentPiece.height,
-                                             currentPiece.width, newH, newW);
-                if (!checkCollision(currentPiece.x, currentPiece.y, rotated, newH, newW))
+                int newH{};
+                int newW{};
+                int** rotated = rotateShape(currentBlock.shape, currentBlock.height,
+                                             currentBlock.width, newH, newW);
+                if (!checkCollision(currentBlock.x, currentBlock.y, rotated, newH, newW))
                 {
-                    freePiece(currentPiece);
-                    currentPiece.shape = rotated;
-                    currentPiece.height = newH;
-                    currentPiece.width = newW;
+                    freeBlock(currentBlock);
+                    currentBlock.shape = rotated;
+                    currentBlock.height = newH;
+                    currentBlock.width = newW;
                 }
                 else
                 {
@@ -57,15 +68,15 @@ int main()
             else if (key == 's' || key == 'S')
             {
                 // Мгновенное падение (drop)
-                while (!checkCollision(currentPiece.x, currentPiece.y + 1,
-                                       currentPiece.shape, currentPiece.height, currentPiece.width))
+                while (!checkCollision(currentBlock.x, currentBlock.y + 1,
+                                       currentBlock.shape, currentBlock.height, currentBlock.width))
                 {
-                    currentPiece.y += 1;
+                    currentBlock.y += 1;
                 }
-                addPieceToField();
+                addBlockToField();
                 clearLines();
-                freePiece(currentPiece);
-                newPiece();
+                freeBlock(currentBlock);
+                newBlock();
                 lastFallTime = std::chrono::steady_clock::now(); // сброс таймера
             }
         }
@@ -75,17 +86,17 @@ int main()
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFallTime).count();
         if (elapsed >= fallInterval)
         {
-            if (!checkCollision(currentPiece.x, currentPiece.y + 1,
-                                currentPiece.shape, currentPiece.height, currentPiece.width))
+            if (!checkCollision(currentBlock.x, currentBlock.y + 1,
+                                currentBlock.shape, currentBlock.height, currentBlock.width))
             {
-                currentPiece.y += 1;
+                currentBlock.y += 1;
             }
             else
             {
-                addPieceToField();
+                addBlockToField();
                 clearLines();
-                freePiece(currentPiece);
-                newPiece();
+                freeBlock(currentBlock);
+                newBlock();
             }
             lastFallTime = now;
         }
