@@ -79,12 +79,12 @@ void restoreConsole()
 
 bool kbhit()
 {
-    struct timeval tv = {0, 0};
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(0, &fds);
-    select(1, &fds, NULL, NULL, &tv);
-    return FD_ISSET(0, &fds);
+    struct timeval tv = {0, 0};         // время ожидания функции (нулевое) т.е. функция 
+    fd_set fds;                         // Объявляет переменную типа «набор файловых дескрипторов»
+    FD_ZERO(&fds);                      // Обнуляет (очищает) набор
+    FD_SET(0, &fds);                    // Добавляет в набор дескриптор 0 (это стандартный ввод — stdin, т.е. клавиатура).
+    select(1, &fds, NULL, NULL, &tv);   // системный вызов, который опрашивает состояние файлового дескриптора
+    return FD_ISSET(0, &fds);           // возвращает true если клавиша нажата и false, если нет
 }
 
 char getch()
