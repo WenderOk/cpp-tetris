@@ -39,10 +39,10 @@
 
 ### Скриншоты
 
-![bash](/prewiews/bash.png)
+![bash](/previews/bash.png)
 
-![cmd](/prewiews/cmd.png)
+![cmd](/previews/cmd.png)
 
-![powershell](/pwsh/.png)
+![powershell](/previews/pwsh.png)
 
 ---
