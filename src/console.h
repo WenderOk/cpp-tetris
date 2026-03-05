@@ -1,11 +1,11 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#pragma once
 
 void initConsole();
+void enableVirtualTerminal();
 void restoreConsole();
 void clearScreen();
-bool kbhit();
-char getch();
-void sleepMillis(int ms);
-
+#ifndef _WIN32
+    bool kbhit();
+    char getch();
 #endif
+void sleepMillis(int ms);
