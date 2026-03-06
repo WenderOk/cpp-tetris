@@ -68,11 +68,9 @@ int main()
             else if (key == 's' || key == 'S')
             {
                 // Мгновенное падение (drop)
-                while (!checkCollision(currentBlock.x, currentBlock.y + 1,
-                                       currentBlock.shape, currentBlock.height, currentBlock.width))
-                {
+                while (!checkCollision(currentBlock.x, currentBlock.y + 1, currentBlock.shape, currentBlock.height, currentBlock.width))
                     currentBlock.y += 1;
-                }
+                
                 addBlockToField();
                 clearLines();
                 freeBlock(currentBlock);
@@ -83,14 +81,11 @@ int main()
 
         // Проверка времени для автоматического падения
         auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFallTime).count();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFallTime).count(); // вычисляет интервал с последнего тика и преобразует его сначала в миллесекунды а потом в число
         if (elapsed >= fallInterval)
         {
-            if (!checkCollision(currentBlock.x, currentBlock.y + 1,
-                                currentBlock.shape, currentBlock.height, currentBlock.width))
-            {
+            if (!checkCollision(currentBlock.x, currentBlock.y + 1, currentBlock.shape, currentBlock.height, currentBlock.width))
                 currentBlock.y += 1;
-            }
             else
             {
                 addBlockToField();
