@@ -1,7 +1,5 @@
+#include "InputHandler.h"
 #include <iostream>
-#include <thread>
-#include <chrono>
-#include "console.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -12,26 +10,11 @@
     #include <stdio.h>
 #endif
 
-void clearScreen()
-{
-    #ifdef _WIN32
-        std::cout << "\033[H";
-    #else
-        std::cout << "\033[2J\033[1;1H" << std::flush;
-    #endif
-}
-
-void sleepMillis(int ms)
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
 
 // Настройка термианала для Windows
 #ifdef _WIN32
-static HANDLE hStdin;
-static DWORD originalMode;
 
-void initConsole()
+void InputHandler::initConsole()
 {
     std::cout << "\033[?25l";                                                // для скрытия курсора
     hStdin = GetStdHandle(STD_INPUT_HANDLE);                                 // получение ссылки для управления свойствами ввода
@@ -41,7 +24,7 @@ void initConsole()
 }
 
 // режим виртуального терминала для поддержки escape-последовательностей
-void enableVirtualTerminal() 
+void InputHandler::enableVirtualTerminal() 
 {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);  // получение дескриптора (ссылки) для управления свойствами вывода
     DWORD dwMode{};                                 // объявление переменной типа DWORD для хранения флаги режима консоли
@@ -51,7 +34,7 @@ void enableVirtualTerminal()
 }
 
 // возращение консоли в исходное состояние при выходе из игры
-void restoreConsole() 
+void InputHandler::restoreConsole() 
 {
     system("cls");
     SetConsoleMode(hStdin, originalMode);
@@ -60,9 +43,7 @@ void restoreConsole()
 #else
 
 // настройка терминала для Linux
-static struct termios original_termios;     // сохранение текущих настроек
-
-void initConsole()
+void InputHandler::initConsole()
 {
     tcgetattr(0, &original_termios);            // считываем текущие настройки
     struct termios newTerm = original_termios;  // создаем копию текущих настроек для последующего измения
@@ -71,13 +52,13 @@ void initConsole()
 }
 
 // возращение консоли в исходное состояние при выходе из игры
-void restoreConsole()
+void InputHandler::restoreConsole()
 {
     tcsetattr(0, TCSANOW, &original_termios);
-    clearScreen();
+    system("clear");
 }
 
-bool kbhit()
+bool InputHandler::hasInput()
 {
     struct timeval tv = {0, 0};         // время ожидания функции (нулевое) т.е. функция 
     fd_set fds;                         // Объявляет переменную типа «набор файловых дескрипторов»
@@ -87,7 +68,7 @@ bool kbhit()
     return FD_ISSET(0, &fds);           // возвращает true если клавиша нажата и false, если нет
 }
 
-char getch()
+char InputHandler::readChar()
 {
     char ch;
     read(0, &ch, 1);

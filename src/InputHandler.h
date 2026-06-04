@@ -1,15 +1,37 @@
 #pragma once
 
+#include <thread>
+#include <chrono>
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <termios.h>
+#endif
+
 class InputHandler
 {
-public:
+#ifdef _WIN32
+    HANDLE hStdin;
+    DWORD originalMode;
+#else 
+    struct termios original_termios;
+#endif
+    void restoreConsole();
     void initConsole();
     void enableVirtualTerminal();
-    void restoreConsole();
-    void clearScreen();
-    #ifndef _WIN32
-        bool kbhit();
-        char getch();
-    #endif
-    void sleepMillis(int ms);
+public:
+    InputHandler()
+    {
+        initConsole();
+        enableVirtualTerminal();
+    }
+    ~InputHandler()
+    { restoreConsole(); }
+    
+    
+    bool hasInput();
+    char readChar();
+    
+    void sleepMillis(int ms)
+    { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
 };
