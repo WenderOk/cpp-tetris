@@ -64,13 +64,20 @@ class Block
 
     Block(int type, int x, int y);
 public:
-    Block createRandom(int fieldWidth);
-    Block rotate();
-    void move();
-    int getX()
+    static Block createRandom(int fieldWidth);
+    Block getRotated() const;
+    void move(int dx, int dy)
+    {
+        x += dx;
+        y += dy;
+    }
+
+    int getType() const
+    { return type; }
+    int getX() const
     { return  x; }
-    int getY()
+    int getY() const
     { return y; }
-    std::array<std::array<int, 4>, 4>& getShape()
+    const std::array<std::array<int, 4>, 4>& getShape() const
     { return shape; }
 };
