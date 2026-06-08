@@ -1,9 +1,11 @@
 #include <array>
+#include <chrono>
 #include <cstdlib>
 #include "Block.h"
 
 Block Block::createRandom(int fieldWidth)
 {
+    srand(std::chrono::steady_clock::now().time_since_epoch().count());
     int randomType{ rand() % 7 };
     int startX{ fieldWidth / 2 - START_X_OFFSETS[randomType] };
     int startY{};
