@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Game.h"
-#include "InputHandler.h"
-#include "Renderer.h"
+class Game;
 
 class GameState
 {
-    virtual void handleInput(Game&, InputHandler&) = 0;
-    virtual void update(Game&, double deltaTime) = 0;
-    virtual void renderer(Game&, Renderer&) = 0;
-
+public:
+    virtual ~GameState() = default;
+    virtual void handleInput(Game& game) = 0;
+    virtual void update(Game& game, double deltaTime) = 0;
+    virtual void render(const Game& game) const = 0;
 };
