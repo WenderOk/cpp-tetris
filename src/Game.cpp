@@ -6,17 +6,22 @@
 #include <utility>
 
 Game::Game()
-{ setState(std::make_unique<PlayingState>()); }
+{
+    currentState = std::make_unique<PlayingState>(*this); 
+}
 
 void Game::setState(std::unique_ptr<GameState> newState)
-{ currentState = std::move(newState); }
+{ nextState = std::move(newState); }
 
 void Game::run()
 {
     std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 
-    while (currentState != nullptr) 
+    while (isRunning && currentState != nullptr) 
     {
+        if(nextState != nullptr)
+            currentState = std::move(nextState);
+
         std::chrono::steady_clock::time_point currentTime{ std::chrono::steady_clock::now() };
         double deltaTime{ std::chrono::duration<double>(currentTime - lastTime).count() };
         lastTime = currentTime;
@@ -27,7 +32,6 @@ void Game::run()
 
         currentState->render(*this);
 
-        inputHandler.sleepMillis(10);
-    
+        inputHandler.sleepMillis(10); 
     }
 }
