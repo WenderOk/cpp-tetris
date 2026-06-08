@@ -52,7 +52,15 @@ void PlayingState::handleInput(Game& game)
         while (!game.getField().hasCollision(currentBlock, 0, 1))
             currentBlock.move(0, 1);
         game.getField().lockBlock(currentBlock);
-        game.getField().clearLines();
+        int cleared{ game.getField().clearLines() };
+        if(cleared > 0)
+        {
+            linesCleared+=cleared;
+            int points[]{0, 100, 300, 500, 800};
+            score += points[cleared] * level;
+            level = (linesCleared / 10) + 1;
+            fallInterval = std::max(100, 500 - (level - 1) * 50);
+        }
         spawnNewBlock(game);
         
         lastFallTime = std::chrono::steady_clock::now(); // сброс таймера
@@ -71,7 +79,16 @@ void PlayingState::update(Game& game, double deltaTime)
         else
         {
             game.getField().lockBlock(currentBlock);
-            game.getField().clearLines();
+            int cleared{ game.getField().clearLines() };
+            if(cleared > 0)
+            {
+                linesCleared+=cleared;
+                int points[]{0, 100, 300, 500, 800};
+                score += points[cleared] * level;
+                level = (linesCleared / 10) + 1;
+                fallInterval = std::max(100, 500 - (level - 1) * 50);
+            }
+            
             spawnNewBlock(game);
         }
         lastFallTime = std::chrono::steady_clock::now();
@@ -80,5 +97,5 @@ void PlayingState::update(Game& game, double deltaTime)
 
 void PlayingState::render(const Game& game) const
 {
-    game.getRenderer().draw(game.getField(), currentBlock);
+    game.getRenderer().draw(game.getField(), currentBlock, score, level, linesCleared);
 }
