@@ -11,11 +11,16 @@ class Game
     Field field;
     Renderer renderer;
     InputHandler inputHandler;
+    bool isRunning;
     std::unique_ptr<GameState> currentState;
+    std::unique_ptr<GameState> nextState;
 public:
     Game();
     void run();
     void setState(std::unique_ptr<GameState>  newState);
+
+    void stop()
+    { isRunning = false; }
     
     Field& getField()
     { return field; }
