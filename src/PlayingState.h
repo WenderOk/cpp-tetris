@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Block.h"
+#include "Game.h"
 #include "GameState.h"
 #include <chrono>
 
@@ -13,17 +14,21 @@ class PlayingState: public GameState
     int score;
     int linesCleared;
     int level;
+
+    bool isPaused;
     
     void spawnNewBlock(Game& game);
 public:
-    PlayingState() 
+    PlayingState(Game& game) 
         : currentBlock{Block::createRandom(10)}, 
           lastFallTime{std::chrono::steady_clock::now()}, 
           fallInterval{500},
           score{},
           linesCleared{0},
-          level{1}
-    {}
+          level{1},
+          isPaused(false)
+    { game.getField().clear(); }
+
     void handleInput(Game& game) override;
     void update(Game& game, double deltaTime) override;
     void render(const Game& game) const override;
