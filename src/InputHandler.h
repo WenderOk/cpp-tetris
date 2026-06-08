@@ -29,8 +29,8 @@ public:
     { restoreConsole(); }
     
     
-    bool hasInput();
-    char readChar();
+    bool kbhit();
+    char getch();
     
     void sleepMillis(int ms)
     { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
