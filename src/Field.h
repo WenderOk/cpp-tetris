@@ -7,7 +7,7 @@ class Field
 {
     static constexpr int WIDTH{10};
     static constexpr int HEIGHT{20};
-    std::array<std::array<int, WIDTH>, HEIGHT> grid;
+    std::array<std::array<int, WIDTH>, HEIGHT> grid{};
 public:
     int clearLines();
     void lockBlock(Block& block);
@@ -15,7 +15,7 @@ public:
 
     int getWidth() const
     { return WIDTH; }
-    int getHeight()
+    int getHeight() const
     { return HEIGHT; }
     const std::array<std::array<int, WIDTH>, HEIGHT>& getGrid() const
     { return grid; }
