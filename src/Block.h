@@ -53,7 +53,7 @@ static constexpr int SHAPES[7][4][4]{
         {1,1,1,0},
         {0,0,0,0} }
 };
-    static constexpr int START_X_OFFSETS[7]{3,4,4,4,4,4,4};
+    static constexpr int START_X_OFFSETS[7]{2,2,1,1,1,1,1};
 
     Block(int type, int x, int y);
 public:
