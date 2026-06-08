@@ -1,8 +1,8 @@
 #include "PlayingState.h"
+#include "GameOverState.h"
 #include "Block.h"
 #include "InputHandler.h"
 #include "Game.h"
-#include <cstdlib>
 
 void PlayingState::spawnNewBlock(Game& game)
 {
@@ -11,12 +11,9 @@ void PlayingState::spawnNewBlock(Game& game)
 
     if(game.getField().hasCollision(currentBlock, 0, 0))
     {
-        // TODO: В будущем здесь будет game.setState(std::make_unique<GameOverState>());
-        // Пока для простоты можно просто очистить поле и начать заново
-        exit(0);
-        game.getField().clearLines(); // Очистит всё, если поле забито
-        currentBlock = Block::createRandom(game.getField().getWidth());
-    }
+        game.setState(std::make_unique<GameOverState>(score));
+        return;
+    }    
 
     lastFallTime = std::chrono::steady_clock::now();
 }
@@ -28,6 +25,21 @@ void PlayingState::handleInput(Game& game)
     char key = game.getInput().getch();
     int x{currentBlock.getX()};
     int y{currentBlock.getY()};
+
+    
+    if (key == 'f' || key == 'F') 
+    {
+        isPaused = !isPaused;
+        return;
+    }
+    
+    if (key == 'q' || key == 'Q') 
+    {
+        game.stop();
+        return;
+    }
+
+    if (isPaused) return;
 
     if (key == 'a' || key == 'A')
     {
@@ -69,6 +81,8 @@ void PlayingState::handleInput(Game& game)
 
 void PlayingState::update(Game& game, double deltaTime)
 {       
+    if(isPaused) return;
+
     auto currentTime = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFallTime).count();
 
@@ -97,5 +111,17 @@ void PlayingState::update(Game& game, double deltaTime)
 
 void PlayingState::render(const Game& game) const
 {
+    if (isPaused) 
+    {
+        game.getRenderer().clearScreen();
+        std::cout << "\n\n";
+        std::cout << "   ==========================\n";
+        std::cout << "   =         PAUSED         =\n";
+        std::cout << "   ==========================\n";
+        std::cout << "\n      Press [F] to Resume\n";
+        std::cout << "      Press [Q] to Quit\n";
+        return;
+    }
+
     game.getRenderer().draw(game.getField(), currentBlock, score, level, linesCleared);
 }
