@@ -12,6 +12,11 @@ public:
     int clearLines();
     void lockBlock(Block& block);
     bool hasCollision(Block& block, int offsetX, int offsetY) const;
+    void clear()
+    {
+        for (auto& row : grid) 
+            row.fill(0); 
+    }
 
     int getWidth() const
     { return WIDTH; }
