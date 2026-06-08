@@ -42,6 +42,12 @@ void InputHandler::restoreConsole()
 
 #else
 
+void InputHandler::enableVirtualTerminal() 
+{
+    // В Linux современные эмуляторы терминала обычно поддерживают ANSI по умолчанию,
+    // поэтому здесь ничего делать не нужно.
+}
+
 // настройка терминала для Linux
 void InputHandler::initConsole()
 {
@@ -55,10 +61,10 @@ void InputHandler::initConsole()
 void InputHandler::restoreConsole()
 {
     tcsetattr(0, TCSANOW, &original_termios);
-    system("clear");
+    std::cout << "\033[2J\033[1;1H" << std::flush;
 }
 
-bool InputHandler::hasInput()
+bool InputHandler::kbhit()
 {
     struct timeval tv = {0, 0};         // время ожидания функции (нулевое) т.е. функция 
     fd_set fds;                         // Объявляет переменную типа «набор файловых дескрипторов»
@@ -68,7 +74,7 @@ bool InputHandler::hasInput()
     return FD_ISSET(0, &fds);           // возвращает true если клавиша нажата и false, если нет
 }
 
-char InputHandler::readChar()
+char InputHandler::getch()
 {
     char ch;
     read(0, &ch, 1);
