@@ -16,7 +16,7 @@ class Renderer
         #endif
     }
 public:
-    void draw(const Field& field, const Block& block) const
+    void draw(const Field& field, const Block& block, int score, int level, int linesCleared) const
     {
         clearScreen();
 
@@ -60,6 +60,9 @@ public:
             }
             std::cout << "\n";
         }
-        std::cout << "Use A/D to move, W to rotate, S to drop.\n";
+        std::cout << "----------------------\n";
+        std::cout << " SCORE: " << score << " | LEVEL: " << level << "\n";
+        std::cout << " LINES: " << linesCleared << "\n"; // Можно заменить на реальный linesCleared, если передашь его
+        std::cout << " [A/D] Move | [W] Rotate | [S] Drop\n";
     }
 };
