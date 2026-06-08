@@ -7,7 +7,7 @@
 
 class Renderer
 {
-    void clearScreen()
+    void clearScreen() const
     {
         #ifdef _WIN32
             std::cout << "\033[H";
@@ -16,7 +16,7 @@ class Renderer
         #endif
     }
 public:
-    void draw(Field& field, Block& block)
+    void draw(const Field& field, const Block& block) const
     {
         clearScreen();
 
@@ -53,9 +53,9 @@ public:
 
                 // Выводим символ
                 if (isDrawn)
-                    std::cout << "# "; // В будущем здесь можно использовать цвета на основе grid[y][x]
+                    std::cout << "\e[47m# \e[0m"; // В будущем здесь можно использовать цвета на основе grid[y][x]
                 else
-                    std::cout << ". ";
+                    std::cout << " .";
                 
             }
             std::cout << "\n";
