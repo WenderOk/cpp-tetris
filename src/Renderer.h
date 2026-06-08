@@ -7,6 +7,7 @@
 
 class Renderer
 {
+public:
     void clearScreen() const
     {
         #ifdef _WIN32
@@ -15,7 +16,7 @@ class Renderer
             std::cout << "\033[2J\033[1;1H" << std::flush;
         #endif
     }
-public:
+    
     void draw(const Field& field, const Block& block, int score, int level, int linesCleared) const
     {
         clearScreen();
