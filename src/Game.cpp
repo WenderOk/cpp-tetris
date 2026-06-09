@@ -20,7 +20,12 @@ void Game::run()
     while (isRunning && currentState != nullptr) 
     {
         if(nextState != nullptr)
-            currentState = std::move(nextState);
+	    {
+	       #ifdef _WIN32
+            system("cls");
+           #endif
+           currentState = std::move(nextState);
+	    }
 
         std::chrono::steady_clock::time_point currentTime{ std::chrono::steady_clock::now() };
         double deltaTime{ std::chrono::duration<double>(currentTime - lastTime).count() };
