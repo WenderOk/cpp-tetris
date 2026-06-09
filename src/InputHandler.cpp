@@ -2,7 +2,9 @@
 #include <iostream>
 
 #ifdef _WIN32
+    #define NOMINMAX
     #include <windows.h>
+    #include <conio.h>
 #else
     #include <termios.h>
     #include <unistd.h>
@@ -40,6 +42,12 @@ void InputHandler::restoreConsole()
     SetConsoleMode(hStdin, originalMode);
 }
 
+bool InputHandler::hasInput() 
+{ return _kbhit() != 0; }
+
+char InputHandler::readChar() 
+{ return _getch(); }
+
 #else
 
 void InputHandler::enableVirtualTerminal() 
@@ -64,7 +72,7 @@ void InputHandler::restoreConsole()
     std::cout << "\033[2J\033[1;1H" << std::flush;
 }
 
-bool InputHandler::kbhit()
+bool InputHandler::hasInput()
 {
     struct timeval tv = {0, 0};         // время ожидания функции (нулевое) т.е. функция 
     fd_set fds;                         // Объявляет переменную типа «набор файловых дескрипторов»
@@ -74,7 +82,7 @@ bool InputHandler::kbhit()
     return FD_ISSET(0, &fds);           // возвращает true если клавиша нажата и false, если нет
 }
 
-char InputHandler::getch()
+char InputHandler::readChar()
 {
     char ch;
     read(0, &ch, 1);
