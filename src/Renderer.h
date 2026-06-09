@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <iostream>
 #include "Block.h"
 #include "Field.h"
@@ -31,30 +32,37 @@ public:
 
         std::array<std::array<int, 4>, 4> shape = block.getShape();
 
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
+        for (int y{0}; y < height; ++y) 
+        {
+            for (int x{0}; x < width; ++x) 
+            {
                 bool isDrawn = false;
+                int colorCode{};
 
                 // 1. Сначала проверяем, есть ли тут застывший блок
-                if (grid[y][x] != 0) {
+                if (grid[y][x] != 0)
+                {
                     isDrawn = true;
-                } 
+                    colorCode = grid[y][x];
+                }
                 // 2. Если нет, проверяем, попадает ли эта ячейка в падающий блок
-                else {
-                    int localX = x - bx;
-                    int localY = y - by;
+                else 
+                {
+                    int localX{x - bx};
+                    int localY{y - by};
                     
                     // Если координаты внутри матрицы 4x4 блока и ячейка активна
-                    if (localX >= 0 && localX < 4 && localY >= 0 && localY < 4) {
-                        if (shape[localY][localX] != 0) {
+                    if (localX >= 0 && localX < 4 && localY >= 0 && localY < 4) 
+                        if (shape[localY][localX] != 0)
+                        {
                             isDrawn = true;
+                            colorCode = block.getType() + 1;
                         }
-                    }
                 }
-
+                
                 // Выводим символ
                 if (isDrawn)
-                    std::cout << "\e[47m# \e[0m"; // В будущем здесь можно использовать цвета на основе grid[y][x]
+                    std::cout << "\e[4" << colorCode << ";3" << colorCode << "m" << "# \e[0m";
                 else
                     std::cout << " .";
                 
