@@ -115,9 +115,9 @@ void PlayingState::render(const Game& game) const
     {
         game.getRenderer().clearScreen();
         std::cout << "\n\n";
-        std::cout << "   ==========================\n";
-        std::cout << "   =         PAUSED         =\n";
-        std::cout << "   ==========================\n";
+        std::cout << "   \e[0;102m==========================\e[0m\n";
+        std::cout << "   \e[0;102m=         PAUSED         =\e[0m\n";
+        std::cout << "   \e[0;102m==========================\e[0m\n";
         std::cout << "\n      Press [F] to Resume\n";
         std::cout << "      Press [Q] to Quit\n";
         return;
