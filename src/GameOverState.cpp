@@ -22,12 +22,11 @@ void GameOverState::render(const Game& game) const {
     game.getRenderer().clearScreen();
     
     std::cout << "\n\n";
-    std::cout << "   ==================================\n";
-    std::cout << "   =           GAME OVER            =\n";
-    std::cout << "   ==================================\n";
-    std::cout << "\n";
+    std::cout << "   \e[0;101m==================================\e[0m\n";
+    std::cout << "   \e[0;101m=           GAME OVER            =\e[0m\n";
+    std::cout << "   \e[0;101m==================================\e[0m\n\n";
     std::cout << "      YOUR FINAL SCORE: " << finalScore << "\n\n";
-    std::cout << "   Press [R] to Restart\n";
-    std::cout << "   Press [Q] to Quit\n";
-    std::cout << "   ==================================\n";
+    std::cout << "   \e[41mPress [R] to Restart              \e[0m\n";
+    std::cout << "   \e[41mPress [Q] to Quit                 \e[0m\n";
+    std::cout << "   \e[0;101m==================================\e[0m\n";
 }
