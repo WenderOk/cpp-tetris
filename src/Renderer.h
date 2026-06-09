@@ -2,6 +2,7 @@
 
 #include <array>
 #include <iostream>
+#include <iomanip>
 #include "Block.h"
 #include "Field.h"
 #include "InputHandler.h"
@@ -12,7 +13,16 @@ public:
     void clearScreen() const
     {
         #ifdef _WIN32
-            std::cout << "\033[H";
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        
+        if (GetConsoleScreenBufferInfo(hConsole, &csbi)) 
+        {
+            DWORD cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+            DWORD cellsWritten;
+            COORD topLeft = {0, 0};
+            SetConsoleCursorPosition(hConsole, topLeft);
+        }
         #else
             std::cout << "\033[2J\033[1;1H" << std::flush;
         #endif
@@ -30,7 +40,7 @@ public:
         int bx{block.getX()};
         int by{block.getY()};
 
-        std::array<std::array<int, 4>, 4> shape = block.getShape();
+        const std::array<std::array<int, 4>, 4>& shape = block.getShape();
 
         for (int y{0}; y < height; ++y) 
         {
@@ -62,16 +72,19 @@ public:
                 
                 // Выводим символ
                 if (isDrawn)
-                    std::cout << "\e[4" << colorCode << ";3" << colorCode << "m" << "# \e[0m";
+                    std::cout << "\033[4" << colorCode << ";3" << colorCode << "m" << "# \033[0m";
                 else
                     std::cout << " .";
                 
             }
             std::cout << "\n";
         }
-        std::cout << "----------------------\n";
-        std::cout << " SCORE: " << score << " | LEVEL: " << level << "\n";
-        std::cout << " LINES: " << linesCleared << "\n"; // Можно заменить на реальный linesCleared, если передашь его
-        std::cout << " [A/D] Move | [W] Rotate | [S] Drop\n";
+        std::cout << "\n";
+        std::cout << "   \033[1;36m----------------------\033[0m\n";
+        std::cout << "   \033[1;33m SCORE:\033[0m " << std::setw(6) << score 
+                << "  \033[1;33mLEVEL:\033[0m " << level << "\n";
+        std::cout << "   \033[1;33m LINES:\033[0m " << std::setw(5) << linesCleared << "\n";
+        std::cout << "   \033[1;36m----------------------\033[0m\n";
+        std::cout << "   \033[90m[A/D]\033[0m Move  \033[90m[W]\033[0m Rotate  \033[90m[S]\033[0m Drop  \033[90m[F]\033[0m Pause\n";
     }
 };
