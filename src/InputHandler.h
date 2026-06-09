@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #ifdef _WIN32
+    #define NOMINMAX
     #include <windows.h>
 #else
     #include <termios.h>
@@ -29,8 +30,8 @@ public:
     { restoreConsole(); }
     
     
-    bool kbhit();
-    char getch();
+    bool hasInput();
+    char readChar();
     
     void sleepMillis(int ms)
     { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
