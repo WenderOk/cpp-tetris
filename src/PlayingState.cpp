@@ -20,9 +20,9 @@ void PlayingState::spawnNewBlock(Game& game)
 
 void PlayingState::handleInput(Game& game)
 {
-    if(!game.getInput().kbhit()) return;
+    if(!game.getInput().hasInput()) return;
 
-    char key = game.getInput().getch();
+    char key = game.getInput().readChar();
     int x{currentBlock.getX()};
     int y{currentBlock.getY()};
 
@@ -30,6 +30,9 @@ void PlayingState::handleInput(Game& game)
     if (key == 'f' || key == 'F') 
     {
         isPaused = !isPaused;
+        #ifdef _WIN32
+          system("cls");
+        #endif
         return;
     }
     
@@ -115,9 +118,9 @@ void PlayingState::render(const Game& game) const
     {
         game.getRenderer().clearScreen();
         std::cout << "\n\n";
-        std::cout << "   \e[0;102m==========================\e[0m\n";
-        std::cout << "   \e[0;102m=         PAUSED         =\e[0m\n";
-        std::cout << "   \e[0;102m==========================\e[0m\n";
+        std::cout << "   \033[0;102m==========================\033[0m\n";
+        std::cout << "   \033[0;102m=         PAUSED         =\033[0m\n";
+        std::cout << "   \033[0;102m==========================\033[0m\n";
         std::cout << "\n      Press [F] to Resume\n";
         std::cout << "      Press [Q] to Quit\n";
         return;
