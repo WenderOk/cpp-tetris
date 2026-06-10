@@ -6,6 +6,7 @@
 #include "Block.h"
 #include "Field.h"
 #include "InputHandler.h"
+#include "Colors.h"
 
 class Renderer
 {
@@ -42,6 +43,7 @@ public:
 
         const std::array<std::array<int, 4>, 4>& shape = block.getShape();
 
+        std::cout << "\n   ";
         for (int y{0}; y < height; ++y) 
         {
             for (int x{0}; x < width; ++x) 
@@ -77,14 +79,30 @@ public:
                     std::cout << " .";
                 
             }
-            std::cout << "\n";
+            std::cout << "\n   ";
         }
+
         std::cout << "\n";
-        std::cout << "   \033[1;36m----------------------\033[0m\n";
-        std::cout << "   \033[1;33m SCORE:\033[0m " << std::setw(6) << score 
-                << "  \033[1;33mLEVEL:\033[0m " << level << "\n";
-        std::cout << "   \033[1;33m LINES:\033[0m " << std::setw(5) << linesCleared << "\n";
-        std::cout << "   \033[1;36m----------------------\033[0m\n";
-        std::cout << "   \033[90m[A/D]\033[0m Move  \033[90m[W]\033[0m Rotate  \033[90m[S]\033[0m Drop  \033[90m[F]\033[0m Pause\n";
+        
+        std::cout << "   " << CYAN << std::setfill('=') << std::setw(22) << "" << RESET << "\n";
+        
+        std::cout << std::setfill(' ');
+
+        std::cout << "   " << YELLOW << "SCORE:" << RESET << " " 
+                << std::left  << std::setw(5) << score 
+                << YELLOW << "LEVEL:" << RESET << " " 
+                << std::right << std::setw(2) << level << "\n";
+                
+        std::cout << "   " << YELLOW << "LINES:" << RESET << " " 
+                << std::left  << std::setw(5) << linesCleared << "\n";
+                
+        std::cout << "   " << CYAN << std::setfill('=') << std::setw(22) << "" << RESET << "\n";
+        
+        std::cout << std::setfill(' ');
+        std::cout << "   " 
+                << GRAY << "[A/D]" << RESET << " Mv " 
+                << GRAY << "[W]"   << RESET << " Rot " 
+                << GRAY << "[S]"   << RESET << " Drp " 
+                << GRAY << "[F]"   << RESET << " Psz\n";
     }
 };
