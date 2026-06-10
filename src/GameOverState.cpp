@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "PlayingState.h"
 #include <memory>
+#include "Colors.h"
 
 void GameOverState::handleInput(Game& game)
 {
@@ -18,18 +19,35 @@ void GameOverState::handleInput(Game& game)
 void GameOverState::update(Game& game, double deltaTime)
 {/* В состоянии Game Over логика игры не обновляется*/ }
 
-void GameOverState::render(const Game& game) const {
+void GameOverState::render(const Game& game) const 
+{
     game.getRenderer().clearScreen();
    
-     int highScore = HighScoreManager::load();
+    int highScore = HighScoreManager::load();
     
+    const int width{36};
+
     std::cout << "\n\n";
-    std::cout << "   \033[0;101m==================================\033[0m\n";
-    std::cout << "   \033[0;101m=           GAME OVER            =\033[0m\n";
-    std::cout << "   \033[0;101m==================================\033[0m\n\n";
-    std::cout << "      YOUR FINAL SCORE: " << finalScore << "\n";
-    std::cout << "      YOUR BEST SCORE: " << highScore << "\n\n";
-    std::cout << "   \033[41mPress [R] to Restart              \033[0m\n";
-    std::cout << "   \033[41mPress [Q] to Quit                 \033[0m\n";
-    std::cout << "   \033[0;101m==================================\033[0m\n";
+    std::cout << "   " << BG_BRED << FG_WHITE << "╔" << std::setfill('=') << std::setw(width - 2) << "" << "╗" << RESET << "\n";
+    std::cout << "   " << BG_BRED << FG_WHITE << "║" 
+              << std::setfill(' ') << std::setw(12) << "" 
+              << BOLD << "GAME OVER" << RESET << BG_BRED << FG_WHITE
+              << std::setw(13) << "" << "║" << RESET << "\n";
+    std::cout << "   " << BG_BRED << FG_WHITE << "╠" << std::setfill('=') << std::setw(width - 2) << "" << "╣" << RESET << "\n";
+
+    std::string scoreStr = "  YOUR FINAL SCORE: " + std::to_string(finalScore);
+    std::string bestStr  = "  YOUR BEST SCORE:  " + std::to_string(highScore) ;
+
+    std::cout << "   " << BG_BRED << FG_WHITE << "║" << std::left << std::setfill(' ') << std::setw(width - 2) << scoreStr << "║" << RESET << "\n";
+    std::cout << "   " << BG_BRED << FG_WHITE << "║" << std::left << std::setfill(' ') << std::setw(width - 2) << bestStr << "║" << RESET << "\n";
+    
+    std::cout << "   " << BG_BRED << FG_WHITE << "╠" << std::setfill('=') << std::setw(width - 2) << "" << "╣" << RESET << "\n";
+
+    std::string restartStr = "  Press [R] to Restart";
+    std::string quitStr    = "  Press [Q] to Quit";
+
+    std::cout << "   " << BG_BRED << FG_WHITE << "║" << std::left << std::setfill(' ') << std::setw(width - 2) << restartStr << "║" << RESET << "\n";
+    std::cout << "   " << BG_BRED << FG_WHITE << "║" << std::left << std::setfill(' ') << std::setw(width - 2) << quitStr << "║" << RESET << "\n";
+
+    std::cout << "   " << BG_BRED << FG_WHITE << "╚" << std::setfill('=') << std::setw(width - 2) << "" << "╝" << RESET << "\n\n";
 }
