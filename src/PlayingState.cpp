@@ -3,6 +3,7 @@
 #include "Block.h"
 #include "InputHandler.h"
 #include "Game.h"
+#include "Colors.h"
 
 void PlayingState::spawnNewBlock(Game& game)
 {
@@ -117,12 +118,21 @@ void PlayingState::render(const Game& game) const
     if (isPaused) 
     {
         game.getRenderer().clearScreen();
+        const int width{30};
+
         std::cout << "\n\n";
-        std::cout << "   \033[0;102m==========================\033[0m\n";
-        std::cout << "   \033[0;102m=         PAUSED         =\033[0m\n";
-        std::cout << "   \033[0;102m==========================\033[0m\n";
-        std::cout << "\n      Press [F] to Resume\n";
-        std::cout << "      Press [Q] to Quit\n";
+        std::cout << "   " << BG_BGREEN << FG_WHITE << "╔" << std::setfill('-') << std::setw(width - 2) << "" << "╗" << RESET << "\n";
+        
+        std::cout << "   " << BG_BGREEN << FG_WHITE << "║" 
+                << std::setfill(' ') << std::setw(11) << "" 
+                << BOLD << "PAUSED" << RESET << BG_BGREEN << FG_WHITE
+                << std::setw(11) << "" << "║" << RESET << "\n";
+                
+        std::cout << "   " << BG_BGREEN << FG_WHITE << "╚" << std::setfill('-') << std::setw(width - 2) << "" << "╝" << RESET << "\n";
+
+        std::cout << "\n" << std::setfill(' ');
+        std::cout << std::setw(8) << "" << "Press [" << BOLD << "F" << RESET << "] to Resume\n";
+        std::cout << std::setw(8) << "" << "Press [" << BOLD << "Q" << RESET << "] to Quit\n\n";
         return;
     }
 
